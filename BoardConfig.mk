@@ -87,4 +87,5 @@ TARGET_RECOVERY_FSTAB := $(LOCAL_PATH)/recovery/root/etc/twrp.fstab
 # TWRP New Minimal (9.0)
 PRODUCT_SHIPPING_API_LEVEL := 28
 TARGET_USES_MKE2FS := true
+TARGET_USES_64_BIT_BINDER := true
 
