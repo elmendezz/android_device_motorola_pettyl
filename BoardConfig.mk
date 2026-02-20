@@ -39,6 +39,8 @@ FOX_USE_LZ4_BINARY := 1
 FOX_ENABLE_AROMA_COMMON := 1
 # Descarga el binario automáticamente durante la compilación
 FOX_USE_AROMA_FM := 1
+#FiX
+OF_NO_SPLASH_CHANGE := 1
 # Opciones específicas para dispositivos antiguos/Go Edition
 # Para ahorrar espacio en el recovery.img si es muy pesado
 FOX_DRASTIC_SIZE_REDUCTION := 1 
