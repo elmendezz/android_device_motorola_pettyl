@@ -35,6 +35,10 @@ OF_KEEP_FORCED_ENCRYPTION := 1
 # Asegura que el recovery tenga herramientas de compresión básicas
 FOX_USE_XZ_UTILS := 1
 FOX_USE_LZ4_BINARY := 1
+# Activa el soporte base para Aroma (menús y scripts)
+FOX_ENABLE_AROMA_COMMON := 1
+# Descarga el binario automáticamente durante la compilación
+FOX_USE_AROMA_FM := 1
 
 
 # Opciones específicas para dispositivos antiguos/Go Edition
