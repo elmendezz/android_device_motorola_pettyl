@@ -14,25 +14,6 @@
 # limitations under the License.
 #
 
-# OrangeFox
-# Indica que estamos compilando OrangeFox
-FOX_RECOVERY_INSTALL_PARTITION := /dev/block/bootdevice/by-name/recovery
-FOX_REPLACE_BUSYBOX_UTILS := 1
-FOX_USE_BASH_SHELL := 1
-FOX_USE_NANO_EDITOR := 1
-FOX_USE_TAR_BINARY := 1
-FOX_USE_SED_BINARY := 1
-FOX_USE_XZ_UTILS := 1
-FOX_ASH_IS_BASH := 1
-
-# Opciones específicas para dispositivos antiguos/Go Edition
-# Para ahorrar espacio en el recovery.img si es muy pesado
-FOX_DRASTIC_SIZE_REDUCTION := 1 
-
-# Personalización (Opcional)
-FOX_VERSION := "R11.1"
-OF_MAINTAINER := "elmendezz"
-
 LOCAL_PATH := device/motorola/pettyl
 
 # Architecture
