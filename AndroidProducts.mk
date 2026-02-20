@@ -15,5 +15,8 @@
 #
 
 PRODUCT_MAKEFILES := \
-	$(LOCAL_DIR)/omni_pettyl.mk \
-	$(LOCAL_DIR)/full_pettyl.mk
+    $(LOCAL_DIR)/omni_pettyl.mk \
+    $(LOCAL_DIR)/full_pettyl.mk
+
+COMMON_LUNCH_CHOICES := \
+    omni_pettyl-eng
