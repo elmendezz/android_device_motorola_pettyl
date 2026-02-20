@@ -29,6 +29,7 @@ OF_SPLASH_ENABLED := 1
 OF_USE_MAGISKBOOT := 1
 OF_NO_TREBLE_COMPATIBILITY_CHECK := 1
 OF_FORCE_USE_BUSYBOX := 1
+OF_MAINTAINER_AVATAR := device/motorola/pettyl/avatar.png
 
 # Opciones específicas para dispositivos antiguos/Go Edition
 # Para ahorrar espacio en el recovery.img si es muy pesado
