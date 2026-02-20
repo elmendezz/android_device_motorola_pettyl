@@ -32,6 +32,10 @@ OF_FORCE_USE_BUSYBOX := 1
 OF_MAINTAINER_AVATAR := device/motorola/pettyl/avatar.png
 OF_KEEP_DM_VERITY := 1
 OF_KEEP_FORCED_ENCRYPTION := 1
+# Asegura que el recovery tenga herramientas de compresión básicas
+FOX_USE_XZ_UTILS := 1
+FOX_USE_LZ4_BINARY := 1
+
 
 # Opciones específicas para dispositivos antiguos/Go Edition
 # Para ahorrar espacio en el recovery.img si es muy pesado
