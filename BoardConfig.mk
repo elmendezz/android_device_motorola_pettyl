@@ -30,10 +30,12 @@ OF_USE_MAGISKBOOT := 1
 OF_NO_TREBLE_COMPATIBILITY_CHECK := 1
 OF_FORCE_USE_BUSYBOX := 1
 OF_MAINTAINER_AVATAR := device/motorola/pettyl/avatar.png
+OF_KEEP_DM_VERITY := 1
+OF_KEEP_FORCED_ENCRYPTION := 1
 
 # Opciones específicas para dispositivos antiguos/Go Edition
 # Para ahorrar espacio en el recovery.img si es muy pesado
-FOX_DRASTIC_SIZE_REDUCTION := 1 
+#FOX_DRASTIC_SIZE_REDUCTION := 1 
 
 # Personalización (Opcional)
 FOX_VERSION := R11.1
