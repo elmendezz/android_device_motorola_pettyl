@@ -24,6 +24,11 @@ FOX_USE_TAR_BINARY := 1
 FOX_USE_SED_BINARY := 1
 FOX_USE_XZ_UTILS := 1
 FOX_ASH_IS_BASH := 1
+# Splash support
+OF_SPLASH_ENABLED := 1
+OF_USE_MAGISKBOOT := 1
+OF_NO_TREBLE_COMPATIBILITY_CHECK := 1
+OF_FORCE_USE_BUSYBOX := 1
 
 # Opciones específicas para dispositivos antiguos/Go Edition
 # Para ahorrar espacio en el recovery.img si es muy pesado
