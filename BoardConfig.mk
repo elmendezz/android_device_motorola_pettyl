@@ -21,7 +21,8 @@ TARGET_ARCH := arm
 TARGET_ARCH_VARIANT := armv7-a-neon
 TARGET_CPU_ABI := armeabi-v7a
 TARGET_CPU_ABI2 := armeabi
-TARGET_CPU_VARIANT := cortex-a53
+TARGET_CPU_VARIANT := generic
+
 
 # Platform
 TARGET_BOARD_PLATFORM := msm8937
@@ -83,4 +84,7 @@ TW_INCLUDE_FUSE_NTFS := true
 TW_INPUT_BLACKLIST := "hbtp_vm"
 TARGET_RECOVERY_FSTAB := $(LOCAL_PATH)/recovery/root/etc/twrp.fstab
 
+# TWRP New Minimal (9.0)
 PRODUCT_SHIPPING_API_LEVEL := 28
+TARGET_USES_MKE2FS := true
+
