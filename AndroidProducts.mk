@@ -13,10 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/twrp_pettyl.mk
-
-COMMON_LUNCH_CHOICES := \
-    twrp_pettyl-eng \
-    twrp_pettyl-userdebug
+	$(LOCAL_DIR)/omni_pettyl.mk \
+	$(LOCAL_DIR)/full_pettyl.mk
