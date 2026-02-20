@@ -30,8 +30,8 @@ FOX_ASH_IS_BASH := 1
 FOX_DRASTIC_SIZE_REDUCTION := 1 
 
 # Personalización (Opcional)
-FOX_VERSION := "R11.1"
-OF_MAINTAINER := "elmendezz"
+FOX_VERSION := R11.1
+OF_MAINTAINER := elmendezz
 
 LOCAL_PATH := device/motorola/pettyl
 
