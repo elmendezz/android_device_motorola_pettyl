@@ -15,5 +15,8 @@
 #
 
 PRODUCT_MAKEFILES := \
-	$(LOCAL_DIR)/twrp_pettyl.mk \
-	$(LOCAL_DIR)/full_pettyl.mk
+    $(LOCAL_DIR)/twrp_pettyl.mk
+
+COMMON_LUNCH_CHOICES := \
+    twrp_pettyl-eng \
+    twrp_pettyl-userdebug
