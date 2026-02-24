@@ -3,7 +3,7 @@ Copyright (C) 2019 The LineageOS Project
 Unified device configuration for Moto E5 Play GO (Pettyl)
 ==================================================
 
-The Motorola Moto E5+ (codenamed _"pettyl"_) is a low range smartphone from Motorola mobility.
+The Motorola Moto E5 Play GO (codenamed _"pettyl"_) is a low range smartphone from Motorola mobility.
 
 It was announced in July 2018. Release date was August 2018.
 
@@ -23,4 +23,4 @@ Camera  | 8 MP, LED flash
 
 ## Device picture
 
-![Motorola Moto E5 Play GO](https://cdn2.gsmarena.com/vv/pics/motorola/motorola-moto-e5-play-android-go-edition-2.jpg "Moto E5 Play GO")
+![Motorola Moto E5 Play GO]([https://cdn2.gsmarena.com/vv/pics/motorola/motorola-moto-e5-play-android-go-edition-2.jpg "Moto E5 Play GO](https://fdn2.gsmarena.com/vv/bigpic/motorola-moto-e5-play-android-go-edition.jpg)")
