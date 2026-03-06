@@ -8,19 +8,21 @@ FOX_USE_TAR_BINARY := 1
 FOX_USE_SED_BINARY := 1
 FOX_USE_XZ_UTILS := 1
 FOX_ASH_IS_BASH := 1
-# Splash support
-OF_SPLASH_ENABLED := 1
 OF_USE_MAGISKBOOT := 0
 OF_NO_TREBLE_COMPATIBILITY_CHECK := 1
 OF_FORCE_USE_BUSYBOX := 1
 OF_KEEP_DM_VERITY := 1
 OF_KEEP_FORCED_ENCRYPTION := 1
+
 # Asegura que el recovery tenga herramientas de compresión básicas
 FOX_USE_LZ4_BINARY := 1
+
 # Activa el soporte base para Aroma (menús y scripts)
 FOX_ENABLE_AROMA_COMMON := 1
+
 # Descarga el binario automáticamente durante la compilación
 FOX_USE_AROMA_FM := 1
+
 # Opciones específicas para dispositivos antiguos/Go Edition
 # Para ahorrar espacio en el recovery.img si es muy pesado
 FOX_DRASTIC_SIZE_REDUCTION := 1 
