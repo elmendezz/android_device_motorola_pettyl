@@ -48,7 +48,7 @@ FOX_ASH_IS_BASH := 1
 # Para ahorrar espacio en el recovery.img si es muy pesado
 FOX_DRASTIC_SIZE_REDUCTION := 1 
 
-# Personalización (Opcional)
-FOX_VERSION := "R11.1"
-OF_MAINTAINER := "elmendezz"
+# Credits
+FOX_VERSION := R11.1
+OF_MAINTAINER := elmendezz
 
