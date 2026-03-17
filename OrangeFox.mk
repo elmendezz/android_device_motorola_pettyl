@@ -28,7 +28,6 @@ FOX_RECOVERY_INSTALL_PARTITION := /dev/block/bootdevice/by-name/recovery
 #FOX_DRASTIC_SIZE_REDUCTION := 1 
 
 # Personalización (Opcional)
-#FOX_VERSION := R11.1
 #OF_MAINTAINER := elmendezz
 
 
