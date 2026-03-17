@@ -1,36 +1,17 @@
-name: Compilar TWRP y OrangeFox Para Pettyl En Paralelo
-run-name: elmendezz-build_${{ github.run_number }}
+name: Compilar OrangeFox 12.1 Para Pettyl
+run-name: elmendezz-fox12.1_${{ github.run_number }}
 
 on:
   workflow_dispatch:
     inputs:
-      # --- INPUTS PARA TWRP ---
-      manifest_url:
-        description: 'TWRP: URL del Manifiesto'
-        required: true
-        default: 'https://github.com/minimal-manifest-twrp/platform_manifest_twrp_omni.git'
-      manifest_branch:
-        description: 'TWRP: Rama del Manifiesto'
-        required: true
-        default: 'twrp-8.1'
-      device_tree_url:
-        description: 'TWRP: URL del Device Tree'
-        required: true
-        default: 'https://github.com/elmendezz/android_device_motorola_pettyl'
-      device_branch:
-        description: 'TWRP: Rama del Device Tree'
-        required: false
-        default: 'main'
-        
-      # --- INPUTS PARA ORANGEFOX ---
       fox_sync_url:
         description: 'OrangeFox: URL del repositorio de Sincronización'
         required: true
         default: 'https://gitlab.com/OrangeFox/sync.git'
       fox_manifest_branch:
-        description: 'OrangeFox: Rama del Manifiesto (ej. 8.1, 9.0)'
+        description: 'OrangeFox: Rama del Manifiesto'
         required: true
-        default: '8.1'
+        default: '12.1'
       fox_device_tree_url:
         description: 'OrangeFox: URL del Device Tree'
         required: true
@@ -38,14 +19,18 @@ on:
       fox_device_branch:
         description: 'OrangeFox: Rama del Device Tree'
         required: false
-        default: 'android-8.1'
+        default: 'fox_12.1'
+      makefile_name:
+        description: 'Nombre del makefile para lunch (ej. twrp_pettyl-eng o omni_pettyl-eng)'
+        required: true
+        default: 'twrp_pettyl-eng'
 
 permissions:
   contents: write
 
 jobs:
-  TWRP-Recovery-Compile:
-    runs-on: ubuntu-22.04 
+  OrangeFox-Recovery-Compile:
+    runs-on: ubuntu-22.04
     
     steps:
     - name: Limpiar espacio en disco
@@ -58,212 +43,57 @@ jobs:
       uses: actions/checkout@v4
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        fetch-depth: 0
-
-    - name: Calcular Versión TWRP (Sin hacer commit aún)
-      id: twrp_version_calc
-      run: |
-        BUILD_NUM=$(sed -n '1p' versiones.txt | tr -d '\r' | tr -d ' ')
-        
-        # Escudo de seguridad: Si está vacío o no es un número, usamos 0
-        if ! [[ "$BUILD_NUM" =~ ^[0-9]+$ ]]; then
-          echo "Aviso: Línea 1 estaba vacía o corrupta ('$BUILD_NUM'). Forzando a 0."
-          BUILD_NUM=0
-        fi
-        
-        NEW_BUILD_NUM=$((BUILD_NUM + 1))
-        VERSION="3.7.0_9-0-elmendezz_build$NEW_BUILD_NUM"
-        
-        # Guardamos en el entorno para usarlo durante el build y al final
-        echo "NEW_BUILD_NUM=$NEW_BUILD_NUM" >> $GITHUB_ENV
-        echo "VERSION=$VERSION" >> $GITHUB_ENV
-        echo "¡Versión TWRP calculada como: $VERSION!"
-        
-    - name: Configurar Java 8
-      uses: actions/setup-java@v4
-      with:
-        distribution: 'temurin'
-        java-version: '8'
-
-    - name: Instalar dependencias
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y bc build-essential zip curl libc6-dev libncurses5 libncurses5-dev libssl-dev x11proto-core-dev libx11-dev libgl1-mesa-dev g++-multilib libxml2-utils xsltproc unzip python2 rsync
-        
-        mkdir -p $HOME/bin
-        ln -s /usr/bin/python2 $HOME/bin/python
-        echo "$HOME/bin" >> $GITHUB_PATH
-
-    - name: Configurar repo y sincronizar TWRP
-      run: |
-        sudo curl -vL https://storage.googleapis.com/git-repo-downloads/repo -o /usr/local/bin/repo
-        sudo chmod a+rx /usr/local/bin/repo
-        
-        mkdir ~/twrp
-        cd ~/twrp
-        
-        repo init --depth=1 -u ${{ github.event.inputs.manifest_url }} -b ${{ github.event.inputs.manifest_branch }}
-        repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags --verbose
-
-    - name: Clonar Árbol del Dispositivo (TWRP)
-      run: |
-        cd ~/twrp
-        if [ -n "${{ github.event.inputs.device_branch }}" ]; then
-          git clone -b ${{ github.event.inputs.device_branch }} ${{ github.event.inputs.device_tree_url }} device/motorola/pettyl
-        else
-          git clone ${{ github.event.inputs.device_tree_url }} device/motorola/pettyl
-        fi
-
-    - name: Compilar Recovery TWRP
-      run: |
-        cd ~/twrp
-        export ALLOW_MISSING_DEPENDENCIES=true
-        source build/envsetup.sh
-        lunch omni_pettyl-eng
-        make recoveryimage -j$(nproc --all)
-
-    - name: Preparar Archivos (.img y .zip)
-      run: |
-        cd ~/twrp/out/target/product/pettyl/
-        
-        IMG_FILE="twrp-${{ env.VERSION }}-pettyl.img"
-        ZIP_FILE="twrp-${{ env.VERSION }}-pettyl.zip"
-        
-        mv recovery.img $IMG_FILE
-        zip $ZIP_FILE $IMG_FILE
-
-    - name: Subir como Artifact de GitHub
-      uses: actions/upload-artifact@v4
-      with:
-        name: TWRP-${{ env.VERSION }}-pettyl
-        path: |
-          /home/runner/twrp/out/target/product/pettyl/twrp-${{ env.VERSION }}-pettyl.img
-          /home/runner/twrp/out/target/product/pettyl/twrp-${{ env.VERSION }}-pettyl.zip
-
-    - name: Publicar Release Bilingüe
-      uses: softprops/action-gh-release@v2
-      with:
-        tag_name: twrp-${{ env.VERSION }}-pettyl
-        name: TWRP ${{ env.VERSION }} - Pettyl
-        files: |
-          /home/runner/twrp/out/target/product/pettyl/twrp-${{ env.VERSION }}-pettyl.img
-          /home/runner/twrp/out/target/product/pettyl/twrp-${{ env.VERSION }}-pettyl.zip
-        body: |
-          ## 📍 Release: TWRP Pettyl
-          **Build:** `${{ env.VERSION }}`
-          
-          ### 📝 Notas de la versión / Release Notes:
-          - **ES:** Compilado con las últimas fuentes de TWRP para Pettyl.
-          - **EN:** Compiled with the latest TWRP sources for Pettyl.
-          - **ES:** Optimizado para Moto E5 Play Go Edition. Incluye versiones `.img` y `.zip`.
-          - **EN:** Optimized for Moto E5 Play Go Edition. Includes `.img` and `.zip` versions.
-          
-          ### 🚀 Instalación rápida / Quick Install:
-          1. **ES:** Pon el móvil en modo **Fastboot** (Vol- + Power). / **EN:** Boot device into **Fastboot** mode (Vol- + Power).
-          2. **PRUEBA / TEST:** `fastboot boot twrp-${{ env.VERSION }}-pettyl.img`
-          3. **INSTALA / INSTALL:** `fastboot flash recovery twrp-${{ env.VERSION }}-pettyl.img`
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Actualizar y pushear versiones.txt (Post-Release TWRP)
-      run: |
-        git config --global user.name "GitHub Action"
-        git config --global user.email "action@github.com"
-        
-        SUCCESS=false
-        for i in {1..5}; do
-          # Obtenemos la última versión del código por si OrangeFox ya hizo push
-          git fetch origin
-          git reset --hard origin/${GITHUB_REF##*/}
-          
-          # Actualizamos únicamente la línea 1 con la versión que acabamos de publicar
-          sed -i "1s/.*/${{ env.NEW_BUILD_NUM }}/" versiones.txt
-          
-          git add versiones.txt
-          git commit -m "TWRP: Update build number to ${{ env.NEW_BUILD_NUM }}" || true
-          
-          # Intentamos empujar
-          if git push origin HEAD; then
-            SUCCESS=true
-            break
-          else
-            delay=$((RANDOM % 9 + 2))
-            echo "Choque detectado. Reintentando en $delay seg... (Intento $i)"
-            sleep $delay
-          fi
-        done
-        
-        if [ "$SUCCESS" != "true" ]; then 
-          echo "Advertencia: El Release fue un éxito, pero no se pudo actualizar versiones.txt en el repositorio."
-          exit 1
-        fi
-
-
-  OrangeFox-Recovery-Compile:
-    runs-on: ubuntu-22.04
-    
-    steps:
-    - name: Limpiar espacio en disco
-      uses: jlumbroso/free-disk-space@v1.3.1
-
-    - name: Descargar el repositorio principal
-      uses: actions/checkout@v4
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
         fetch-depth: 0 
 
-    - name: Calcular Versión OrangeFox (Sin hacer commit aún)
+    - name: Calcular Versión OrangeFox
       id: fox_version_calc
       run: |
-        BUILD_NUM=$(sed -n '2p' versiones.txt | tr -d '\r' | tr -d ' ')
+        # Ahora leemos la Línea 1 de versiones.txt
+        BUILD_NUM=$(sed -n '1p' versiones.txt | tr -d '\r' | tr -d ' ')
         
         if ! [[ "$BUILD_NUM" =~ ^[0-9]+$ ]]; then
-          echo "Aviso: Línea 2 vacía o corrupta. Forzando a 0."
+          echo "Aviso: Línea 1 vacía o corrupta. Forzando a 0."
           BUILD_NUM=0
         fi
         
         NEW_BUILD_NUM=$((BUILD_NUM + 1))
-        VERSION="R11.1-elmendezz_build$NEW_BUILD_NUM"
+        VERSION="R11.1-12.1-elmendezz_build$NEW_BUILD_NUM"
         
         echo "NEW_BUILD_NUM=$NEW_BUILD_NUM" >> $GITHUB_ENV
         echo "VERSION=$VERSION" >> $GITHUB_ENV
         echo "¡Versión OrangeFox calculada como: $VERSION!"
 
-    - name: Configurar Java 8 (Requerido para Android 8.1)
+    - name: Configurar Java 11 (Requerido para Android 12.1)
       uses: actions/setup-java@v4
       with:
         distribution: 'temurin'
-        java-version: '8'
+        java-version: '11'
 
-    - name: Instalar Dependencias y Configurar Python 2
+    - name: Instalar Dependencias (Python 3)
       run: |
         sudo apt-get update
-        sudo apt-get install -y bc build-essential zip curl libc6-dev libncurses5 libncurses5-dev libssl-dev x11proto-core-dev libx11-dev libgl1-mesa-dev g++-multilib libxml2-utils xsltproc unzip python2 rsync git ccache
-
-        mkdir -p $HOME/bin
-        ln -s /usr/bin/python2 $HOME/bin/python
-        echo "$HOME/bin" >> $GITHUB_PATH
+        sudo apt-get install -y bc build-essential zip curl libc6-dev libncurses5-dev x11proto-core-dev libx11-dev libgl1-mesa-dev g++-multilib libxml2-utils xsltproc unzip git ccache python3 python-is-python3 libssl-dev rsync
 
     - name: Configurar Repo Tool
       run: |
-        curl https://storage.googleapis.com/git-repo-downloads/repo > $HOME/bin/repo
-        chmod a+x $HOME/bin/repo
+        curl -sL https://storage.googleapis.com/git-repo-downloads/repo > ~/repo
+        chmod a+x ~/repo
+        sudo mv ~/repo /usr/local/bin/repo
 
-    - name: Sincronizar Fuentes (OrangeFox)
+    - name: Sincronizar Fuentes de OrangeFox 12.1
       run: |
         mkdir -p ~/OrangeFox_sync
         cd ~/OrangeFox_sync
-        if [ ! -d "sync" ]; then
-          git clone ${{ github.event.inputs.fox_sync_url }}
-        fi
+        git clone ${{ github.event.inputs.fox_sync_url }}
         
-        cd sync/legacy
-        chmod +x orangefox_sync_legacy.sh
-        ./orangefox_sync_legacy.sh --branch ${{ github.event.inputs.fox_manifest_branch }} --path $HOME/fox_8.1
+        cd sync
+        chmod +x orangefox_sync.sh
+        # Usamos el script estándar para ramas >= 11.0
+        ./orangefox_sync.sh --branch ${{ github.event.inputs.fox_manifest_branch }} --path $HOME/fox_12.1
         
-    - name: Clonar Árbol del Dispositivo (OrangeFox)
+    - name: Clonar Árbol del Dispositivo
       run: |
-        cd $HOME/fox_8.1
+        cd $HOME/fox_12.1
         if [ -n "${{ github.event.inputs.fox_device_branch }}" ]; then
           git clone -b ${{ github.event.inputs.fox_device_branch }} ${{ github.event.inputs.fox_device_tree_url }} device/motorola/pettyl
         else
@@ -272,17 +102,16 @@ jobs:
 
     - name: Compilar Recovery OrangeFox
       run: |
-        cd $HOME/fox_8.1
+        cd $HOME/fox_12.1
         
-        export JAVA_HOME=$JAVA_HOME_8_X64
-        export PATH=$JAVA_HOME/bin:$PATH
         export ALLOW_MISSING_DEPENDENCIES=true
         export LC_ALL="C"
         
         source build/envsetup.sh
-        lunch omni_pettyl-eng
+        lunch ${{ github.event.inputs.makefile_name }}
         make clean
         
+        # Para 12.1 es común requerir compilar la imagen boot o recovery según como esté estructurado el árbol.
         mka recoveryimage FOX_VERSION="${{ env.VERSION }}" OF_MAINTAINER="elmendezz" -j$(nproc --all)
 
     - name: Subir como Artifact de GitHub
@@ -290,26 +119,26 @@ jobs:
       with:
         name: OrangeFox-${{ env.VERSION }}-pettyl
         path: |
-          /home/runner/fox_8.1/out/target/product/pettyl/OrangeFox-*-pettyl.img
-          /home/runner/fox_8.1/out/target/product/pettyl/OrangeFox-*-pettyl.zip
+          /home/runner/fox_12.1/out/target/product/pettyl/OrangeFox-*-pettyl.img
+          /home/runner/fox_12.1/out/target/product/pettyl/OrangeFox-*-pettyl.zip
 
-    - name: Publicar Release Bilingüe
+    - name: Publicar Pre-Release Bilingüe
       uses: softprops/action-gh-release@v2
       with:
         tag_name: OrangeFox-${{ env.VERSION }}-pettyl
-        name: OrangeFox ${{ env.VERSION }} - Pettyl
+        name: OrangeFox ${{ env.VERSION }} - Pettyl (Pre-Release)
+        prerelease: true # <--- ESTO CONVIERTE EL RELEASE EN PRE-RELEASE
         files: |
-          /home/runner/fox_8.1/out/target/product/pettyl/OrangeFox-*-pettyl.img
-          /home/runner/fox_8.1/out/target/product/pettyl/OrangeFox-*-pettyl.zip
+          /home/runner/fox_12.1/out/target/product/pettyl/OrangeFox-*-pettyl.img
+          /home/runner/fox_12.1/out/target/product/pettyl/OrangeFox-*-pettyl.zip
         body: |
-          ## 📍 Release: OrangeFox Pettyl
+          ## 📍 Pre-Release: OrangeFox 12.1 Pettyl
           **Build:** `${{ env.VERSION }}`
+          **Estado / Status:** 🚧 Testing / Pre-release
           
           ### 📝 Notas de la versión / Release Notes:
-          - **ES:** Compilado con las últimas fuentes de OrangeFox Legacy para Pettyl.
-          - **EN:** Compiled with the latest OrangeFox Legacy sources for Pettyl.
-          - **ES:** Optimizado para Moto E5 Play Go Edition.
-          - **EN:** Optimized for Moto E5 Play Go Edition.
+          - **ES:** Compilado con las fuentes de OrangeFox 12.1 para Pettyl.
+          - **EN:** Compiled with OrangeFox 12.1 sources for Pettyl.
           
           ### 🚀 Instalación rápida / Quick Install:
           1. **ES:** Pon el móvil en modo **Fastboot** (Vol- + Power). / **EN:** Boot device into **Fastboot** mode (Vol- + Power).
@@ -318,7 +147,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Actualizar y pushear versiones.txt (Post-Release OrangeFox)
+    - name: Actualizar y pushear versiones.txt
       run: |
         git config --global user.name "GitHub Action"
         git config --global user.email "action@github.com"
@@ -328,11 +157,11 @@ jobs:
           git fetch origin
           git reset --hard origin/${GITHUB_REF##*/}
           
-          # Actualizamos únicamente la línea 2 con la versión que acabamos de publicar
-          sed -i "2s/.*/${{ env.NEW_BUILD_NUM }}/" versiones.txt
+          # Actualizamos la LÍNEA 1 con el nuevo build
+          sed -i "1s/.*/${{ env.NEW_BUILD_NUM }}/" versiones.txt
           
           git add versiones.txt
-          git commit -m "OrangeFox: Update build number to ${{ env.NEW_BUILD_NUM }}" || true
+          git commit -m "OrangeFox 12.1: Update build number to ${{ env.NEW_BUILD_NUM }}" || true
           
           if git push origin HEAD; then
             SUCCESS=true
