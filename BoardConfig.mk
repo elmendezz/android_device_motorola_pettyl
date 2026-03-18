@@ -50,7 +50,7 @@ BOARD_MKBOOTIMG_ARGS := --ramdisk_offset $(BOARD_RAMDISK_OFFSET) --tags_offset $
 #TARGET_KERNEL_SOURCE := kernel/motorola/msm8937/
 
 # Encryption
-TARGET_HW_DISK_ENCRYPTION := true
+TARGET_HW_DISK_ENCRYPTION := false
 PLATFORM_SECURITY_PATCH := 2029-10-01
 
 # Keymaster
@@ -80,7 +80,7 @@ BOARD_USES_QCOM_HARDWARE := true
 TW_EXCLUDE_TWRPAPP := true
 TW_EXTRA_LANGUAGES := true
 TW_THEME := portrait_hdpi
-#TW_INCLUDE_CRYPTO := true
+TW_INCLUDE_CRYPTO := false
 TW_INCLUDE_FUSE_EXFAT := true
 TW_INCLUDE_FUSE_NTFS := true
 TW_INPUT_BLACKLIST := "hbtp_vm"
