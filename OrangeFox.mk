@@ -25,14 +25,8 @@ FOX_RECOVERY_INSTALL_PARTITION := /dev/block/bootdevice/by-name/recovery
 #FOX_ENABLE_AROMA_COMMON := 1
 
 # Descarga el binario automáticamente durante la compilación
-#FOX_USE_AROMA_FM := 1
+#FOX_USE_AROMA_FM := 1 
 
-# Opciones específicas para dispositivos antiguos/Go Edition
-# Para ahorrar espacio en el recovery.img
-FOX_DRASTIC_SIZE_REDUCTION := 1 
-
-
-# ----------- FIX THE BOOTLOOP - TODO ------------- ↓
 # OrangeFox
 # Indica que estamos compilando OrangeFox
 FOX_RECOVERY_INSTALL_PARTITION := /dev/block/bootdevice/by-name/recovery
@@ -45,7 +39,7 @@ FOX_USE_XZ_UTILS := 1
 FOX_ASH_IS_BASH := 1
 
 # Opciones específicas para dispositivos antiguos/Go Edition
-# Para ahorrar espacio en el recovery.img si es muy pesado
+# Para ahorrar espacio en el recovery.img
 FOX_DRASTIC_SIZE_REDUCTION := 1 
 
 # Credits
