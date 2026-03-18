@@ -1,4 +1,8 @@
 # OrangeFox
+# Configuración de brillo para el Recovery
+TW_MAX_BRIGHTNESS := 255
+TW_DEFAULT_BRIGHTNESS := 150
+
 # Indica que estamos compilando OrangeFox
 FOX_RECOVERY_INSTALL_PARTITION := /dev/block/bootdevice/by-name/recovery
 #FOX_REPLACE_BUSYBOX_UTILS := 1
