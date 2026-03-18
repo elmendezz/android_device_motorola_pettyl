@@ -28,7 +28,7 @@ FOX_RECOVERY_INSTALL_PARTITION := /dev/block/bootdevice/by-name/recovery
 #FOX_USE_AROMA_FM := 1
 
 # Opciones específicas para dispositivos antiguos/Go Edition
-# Para ahorrar espacio en el recovery.img si es muy pesado
+# Para ahorrar espacio en el recovery.img
 FOX_DRASTIC_SIZE_REDUCTION := 1 
 
 
