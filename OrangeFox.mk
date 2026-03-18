@@ -29,10 +29,7 @@ FOX_RECOVERY_INSTALL_PARTITION := /dev/block/bootdevice/by-name/recovery
 
 # Opciones específicas para dispositivos antiguos/Go Edition
 # Para ahorrar espacio en el recovery.img si es muy pesado
-#FOX_DRASTIC_SIZE_REDUCTION := 1 
-
-# Personalización (Opcional)
-#OF_MAINTAINER := elmendezz
+FOX_DRASTIC_SIZE_REDUCTION := 1 
 
 
 # ----------- FIX THE BOOTLOOP - TODO ------------- ↓
